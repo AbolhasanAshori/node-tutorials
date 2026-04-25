@@ -1,13 +1,23 @@
 const http = require("node:http");
+const fs = require("node:fs");
 
 const server = http.createServer((req, res) => {
-  const { url } = req;
+  const { url, method } = req;
 
-  if (url === '/') {
+  if (url === "/") {
     res.write("<html>");
     res.write("<head><title>Enter Message</title></head>");
-    res.write("<body><form action=\"/message\" method=\"POST\"><input type=\"text\"><button type=\"submit\">Send</button></form></body>");
+    res.write(
+      '<body><form action="/message" method="POST"><input type="text"><button type="submit">Send</button></form></body>',
+    );
     res.write("</html>");
+    return res.end();
+  }
+
+  if (url === "/message" && method === "POST") {
+    fs.writeFileSync("message.txt", "DUMMY");
+    res.statusCode = 302;
+    res.setHeader("Location", "/");
     return res.end();
   }
 
