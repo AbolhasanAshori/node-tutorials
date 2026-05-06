@@ -5,10 +5,10 @@ const router = express.Router();
 router
   .get("/add-product", (_req, res) => {
     res.send(
-      '<form action="/product" method="POST"><input type="text" name="title" /><button type="submit">Save</button></form>',
+      '<form action="/admin/add-product" method="POST"><input type="text" name="title" /><button type="submit">Save</button></form>',
     );
   })
-  .post("/product", (req, res) => {
+  .post("/add-product", (req, res) => {
     console.log(req.body);
     res.redirect("/");
   });
