@@ -1,20 +1,23 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const adminRoutes = require("./routes/admin");
+const adminData = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const path = require("node:path");
 const pathUtil = require("./util/path");
 
-const app = express();
+express()
+  .set("view engine", "pug")
+  .set("views", "views")
 
-app.use(bodyParser.urlencoded());
-app.use(express.static(path.join(__dirname, "public")));
+  .use(express.urlencoded())
+  .use(express.static(path.join(__dirname, "public")))
 
-app.use("/admin", adminRoutes);
-app.use(shopRoutes);
+  .use("/admin", adminData.routes)
+  .use(shopRoutes)
 
-app.use((_req, res) => {
-  res.status(404).sendFile(path.join(pathUtil.rootDir, "views", "not-found.html"));
-});
+  .use((_req, res) => {
+    res.status(404).sendFile(path.join(pathUtil.rootDir, "views", "not-found.html"));
+  })
 
-app.listen(3000);
+  .listen(3000, () => {
+    console.log("Server running at http://localhost:3000");
+  });
