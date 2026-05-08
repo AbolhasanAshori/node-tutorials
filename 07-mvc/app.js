@@ -1,8 +1,9 @@
 const express = require("express");
-const adminData = require("./routes/admin");
+const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const path = require("node:path");
 const { engine } = require("express-handlebars");
+const { getNotFound } = require("./controllers/error");
 
 express()
   .engine(
@@ -19,12 +20,10 @@ express()
   .use(express.urlencoded())
   .use(express.static(path.join(__dirname, "public")))
 
-  .use("/admin", adminData.routes)
+  .use("/admin", adminRoutes)
   .use(shopRoutes)
 
-  .use((_req, res) => {
-    res.status(404).render("not-found", { title: "Not Found", path: "*" });
-  })
+  .use(getNotFound)
 
   .listen(3000, () => {
     console.log("Server running at http://localhost:3000");
