@@ -7,6 +7,7 @@ router.get("/", (_req, res) => {
   const { products } = adminData;
   res.render("shop", {
     title: "Shop",
+    path: "/",
     products,
   });
 });
