@@ -2,9 +2,18 @@ const express = require("express");
 const adminData = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const path = require("node:path");
+const { engine } = require("express-handlebars");
 
 express()
-  .set("view engine", "ejs")
+  .engine(
+    "hbs",
+    engine({
+      layoutsDir: "views/layouts",
+      defaultLayout: "main-layout",
+      extname: "hbs",
+    }),
+  )
+  .set("view engine", "hbs")
   .set("views", "views")
 
   .use(express.urlencoded())
