@@ -2,18 +2,9 @@ const express = require("express");
 const adminData = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const path = require("node:path");
-const { engine } = require("express-handlebars");
 
 express()
-  .engine(
-    "hbs",
-    engine({
-      layoutsDir: "views/layouts",
-      defaultLayout: "main-layout",
-      extname: "hbs",
-    }),
-  )
-  .set("view engine", "hbs")
+  .set("view engine", "ejs")
   .set("views", "views")
 
   .use(express.urlencoded())
@@ -23,7 +14,7 @@ express()
   .use(shopRoutes)
 
   .use((_req, res) => {
-    res.status(404).render("not-found", { title: "Not Found" });
+    res.status(404).render("not-found", { title: "Not Found", path: "*" });
   })
 
   .listen(3000, () => {
