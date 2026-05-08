@@ -6,7 +6,19 @@ const products = [];
 
 router
   .get("/add-product", (_req, res) => {
-    res.render("add-product", { title: "Add Product", path: "/admin/add-product" });
+    res.render("add-product", {
+      title: "Add Product",
+      path: "/admin/add-product",
+      config: {
+        css: {
+          product: true,
+          forms: true,
+        },
+        activePath: {
+          addProduct: true,
+        },
+      },
+    });
   })
   .post("/add-product", (req, res) => {
     products.push({ title: req.body.title });
