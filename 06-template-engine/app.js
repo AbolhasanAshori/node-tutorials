@@ -2,7 +2,6 @@ const express = require("express");
 const adminData = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const path = require("node:path");
-const pathUtil = require("./util/path");
 
 express()
   .set("view engine", "pug")
@@ -15,7 +14,7 @@ express()
   .use(shopRoutes)
 
   .use((_req, res) => {
-    res.status(404).sendFile(path.join(pathUtil.rootDir, "views", "not-found.html"));
+    res.status(404).render("not-found", { title: "Not Found" });
   })
 
   .listen(3000, () => {
