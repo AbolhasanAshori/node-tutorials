@@ -1,4 +1,4 @@
-const products = [];
+const Product = require("../models/product");
 
 function getAddProduct(_req, res) {
   res.render("add-product", {
@@ -17,20 +17,23 @@ function getAddProduct(_req, res) {
 }
 
 function postAddProduct(req, res) {
-  products.push({ title: req.body.title });
+  const product = new Product(req.body.title);
+  product.save();
   res.redirect("/");
 }
 
 function getProducts(_req, res) {
-  res.render("shop", {
-    title: "Shop",
-    path: "/",
-    hasProducts: products.length > 0,
-    products,
-    config: {
-      css: { product: true },
-      activePath: { shop: true },
-    },
+  Product.fetchAll((products) => {
+    res.render("shop", {
+      title: "Shop",
+      path: "/",
+      hasProducts: products.length > 0,
+      products,
+      config: {
+        css: { product: true },
+        activePath: { shop: true },
+      },
+    });
   });
 }
 
