@@ -18,9 +18,15 @@ function getProducts(_req, res) {
 function getProductItem(req, res) {
   const id = req.params.productId;
   Product.findById(id, (product) => {
-    console.log(product);
+    res.render("shop/product-detail", {
+      product,
+      title: product.title,
+      path: "/products",
+      config: {
+        activePath: { productList: true },
+      },
+    });
   });
-  res.redirect("/");
 }
 
 function getIndex(_req, res) {
