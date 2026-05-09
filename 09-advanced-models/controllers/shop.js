@@ -15,6 +15,14 @@ function getProducts(_req, res) {
   });
 }
 
+function getProductItem(req, res) {
+  const id = req.params.productId;
+  Product.findById(id, (product) => {
+    console.log(product);
+  });
+  res.redirect("/");
+}
+
 function getIndex(_req, res) {
   Product.fetchAll((products) => {
     res.render("shop/index", {
@@ -59,6 +67,7 @@ function getCheckout(_req, res) {
 
 module.exports = {
   getProducts,
+  getProductItem,
   getIndex,
   getCart,
   getOrders,

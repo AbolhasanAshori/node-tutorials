@@ -24,7 +24,15 @@ class Product {
     getProductsFromFile(callback);
   }
 
+  static findById(id, callback) {
+    getProductsFromFile((products) => {
+      const product = products.find((p) => p.id === id);
+      callback(product);
+    });
+  }
+
   save() {
+    this.id = Math.random().toString();
     getProductsFromFile((products) => {
       products.push(this);
       fs.writeFile(dbPath, JSON.stringify(products), (err) => {
