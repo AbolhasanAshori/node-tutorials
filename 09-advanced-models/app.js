@@ -10,6 +10,7 @@ express()
     "hbs",
     engine({
       layoutsDir: "views/layouts",
+      partialsDir: "views/partials",
       defaultLayout: "main-layout",
       extname: "hbs",
     }),
