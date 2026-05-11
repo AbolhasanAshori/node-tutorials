@@ -46,12 +46,23 @@ function getIndex(_req, res) {
 }
 
 function getCart(_req, res) {
-  res.render("shop/cart", {
-    title: "Your Cart",
-    path: "/cart",
-    config: {
-      activePath: { cart: true },
-    },
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      const cartProducts = [];
+      for (product of products) {
+        const cartProductData = cart.products.find((p) => p.id === product.id);
+        if (cartProductData) cartProducts.push({ productData: product, qty: cartProductData.qty });
+      }
+      res.render("shop/cart", {
+        title: "Your Cart",
+        path: "/cart",
+        products: cartProducts,
+        hasProducts: cartProducts.length > 0,
+        config: {
+          activePath: { cart: true },
+        },
+      });
+    });
   });
 }
 

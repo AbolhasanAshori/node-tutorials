@@ -54,6 +54,10 @@ class Cart {
       });
     });
   }
+
+  static getCart(callback) {
+    getCartFromFile(callback);
+  }
 }
 
 module.exports = Cart;
