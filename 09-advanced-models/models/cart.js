@@ -44,6 +44,8 @@ class Cart {
       if (!cart) return;
       const product = cart.products.find((p) => p.id === id);
 
+      if (!product) return;
+
       const updatedCart = {
         products: cart.products.filter((p) => p.id !== id),
         totalPrice: cart.totalPrice - productPrice * product.qty,
