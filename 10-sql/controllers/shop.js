@@ -2,47 +2,53 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 function getProducts(_req, res) {
-  Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      title: "All Products",
-      path: "/product",
-      hasProducts: products.length > 0,
-      products,
-      config: {
-        css: { product: true },
-        activePath: { productList: true },
-      },
-    });
-  });
+  Product.fetchAll()
+    .then(([rows]) => {
+      res.render("shop/product-list", {
+        title: "All Products",
+        path: "/product",
+        hasProducts: rows.length > 0,
+        products: rows,
+        config: {
+          css: { product: true },
+          activePath: { productList: true },
+        },
+      });
+    })
+    .catch((err) => console.error(err));
 }
 
 function getProductItem(req, res) {
   const id = req.params.productId;
-  Product.findById(id, (product) => {
-    res.render("shop/product-detail", {
-      product,
-      title: product.title,
-      path: "/products",
-      config: {
-        activePath: { productList: true },
-      },
-    });
-  });
+  Product.findById(id)
+    .then(([product]) => {
+      res.render("shop/product-detail", {
+        product: product[0],
+        title: product[0].title,
+        path: "/products",
+        config: {
+          activePath: { productList: true },
+        },
+      });
+    })
+    .catch((err) => console.error(err));
 }
 
 function getIndex(_req, res) {
-  Product.fetchAll((products) => {
-    res.render("shop/index", {
-      title: "Shop",
-      path: "/",
-      hasProducts: products.length > 0,
-      products,
-      config: {
-        css: { product: true },
-        activePath: { shop: true },
-      },
-    });
-  });
+  Product.fetchAll()
+    .then(([rows]) => {
+      res.render("shop/index", {
+        title: "Shop",
+        path: "/",
+        hasProducts: rows.length > 0,
+        products: rows,
+        config: {
+          css: { product: true },
+          activePath: { shop: true },
+        },
+      });
+    })
+    .catch((err) => console.error(err));
 }
 
 function getCart(_req, res) {

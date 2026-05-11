@@ -20,8 +20,12 @@ function getAddProduct(_req, res) {
 function postAddProduct(req, res) {
   const { title, imageUrl, description, price } = req.body;
   const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect("/");
+  product
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => console.error(err));
 }
 
 function getEditProduct(req, res) {
