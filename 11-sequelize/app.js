@@ -5,28 +5,40 @@ const shopRoutes = require("./routes/shop");
 const path = require("node:path");
 const { engine } = require("express-handlebars");
 const { getNotFound } = require("./controllers/error");
+const sequelize = require("./util/database");
 
-express()
-  .engine(
-    "hbs",
-    engine({
-      layoutsDir: "views/layouts",
-      partialsDir: "views/partials",
-      defaultLayout: "main-layout",
-      extname: "hbs",
-    }),
-  )
-  .set("view engine", "hbs")
-  .set("views", "views")
+const app = express();
+app.engine(
+  "hbs",
+  engine({
+    layoutsDir: "views/layouts",
+    partialsDir: "views/partials",
+    defaultLayout: "main-layout",
+    extname: "hbs",
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+    },
+  }),
+);
+app.set("view engine", "hbs");
+app.set("views", "views");
 
-  .use(express.urlencoded())
-  .use(express.static(path.join(__dirname, "public")))
+app.use(express.urlencoded());
+app.use(express.static(path.join(__dirname, "public")));
 
-  .use("/admin", adminRoutes)
-  .use(shopRoutes)
+app.use("/admin", adminRoutes);
+app.use(shopRoutes);
 
-  .use(getNotFound)
+app.use(getNotFound);
 
-  .listen(3000, () => {
-    console.log("Server running at http://localhost:3000");
+sequelize
+  .sync()
+  .then((result) => {
+    console.log(result);
+    app.listen(3000, () => {
+      console.log("Server running at http://localhost:3000");
+    });
+  })
+  .catch((err) => {
+    console.error(err);
   });

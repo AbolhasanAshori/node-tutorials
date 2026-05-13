@@ -2,13 +2,13 @@ const Cart = require("../models/cart");
 const Product = require("../models/product");
 
 function getProducts(_req, res) {
-  Product.fetchAll()
-    .then(([rows]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/product-list", {
         title: "All Products",
         path: "/product",
-        hasProducts: rows.length > 0,
-        products: rows,
+        hasProducts: products.length > 0,
+        products,
         config: {
           css: { product: true },
           activePath: { productList: true },
@@ -20,11 +20,11 @@ function getProducts(_req, res) {
 
 function getProductItem(req, res) {
   const id = req.params.productId;
-  Product.findById(id)
-    .then(([product]) => {
+  Product.findByPk(id)
+    .then((product) => {
       res.render("shop/product-detail", {
-        product: product[0],
-        title: product[0].title,
+        product: product,
+        title: product.title,
         path: "/products",
         config: {
           activePath: { productList: true },
@@ -35,13 +35,13 @@ function getProductItem(req, res) {
 }
 
 function getIndex(_req, res) {
-  Product.fetchAll()
-    .then(([rows]) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/index", {
         title: "Shop",
         path: "/",
-        hasProducts: rows.length > 0,
-        products: rows,
+        hasProducts: products.length > 0,
+        products,
         config: {
           css: { product: true },
           activePath: { shop: true },
