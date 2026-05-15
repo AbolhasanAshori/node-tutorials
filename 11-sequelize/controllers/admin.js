@@ -94,7 +94,7 @@ function postDeleteProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
-function getProducts(_req, res) {
+function getProducts(req, res) {
   req.user
     .getProducts()
     .then((products) => {
