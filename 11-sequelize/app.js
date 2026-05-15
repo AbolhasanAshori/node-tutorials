@@ -8,6 +8,8 @@ const { getNotFound } = require("./controllers/error");
 const Product = require("./models/product");
 const User = require("./models/user");
 const sequelize = require("./util/database");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 const app = express();
 app.engine(
@@ -50,11 +52,17 @@ Product.belongsTo(User, {
 });
 User.hasMany(Product);
 
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
+
 sequelize
   .authenticate()
   .then(() => {
     console.log("DBConnection has been established successfully.");
     return sequelize.sync();
+    // return sequelize.sync({ force: true });
   })
   .then(() => {
     return User.findByPk(1);
