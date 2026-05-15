@@ -68,10 +68,17 @@ sequelize
     return User.findByPk(1);
   })
   .then((user) => {
-    if (!user) {
-      return User.create({ name: "Max", email: "test@example.com" });
+    if (user) {
+      return user;
     }
-    return user;
+    return User.create({ name: "Max", email: "test@example.com" });
+  })
+  .then((user) => {
+    return Promise.all([Promise.resolve(user), Cart.findByPk(1)]);
+  })
+  .then(([user, cart]) => {
+    if (cart) return cart;
+    return user.createCart();
   })
   .then(() => {
     app.listen(3000, () => {
