@@ -64,6 +64,9 @@ function getCart(_req, res) {
         path: "/cart",
         products: cartProducts,
         hasProducts: cartProducts.length > 0,
+        css: {
+          cart: true,
+        },
         config: {
           activePath: { cart: true },
         },
