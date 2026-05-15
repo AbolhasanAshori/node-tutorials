@@ -19,12 +19,13 @@ function getAddProduct(_req, res) {
 
 function postAddProduct(req, res) {
   const { title, imageUrl, description, price } = req.body;
-  Product.create({
-    title,
-    price,
-    imageUrl,
-    description,
-  })
+  req.user
+    .createProduct({
+      title,
+      price,
+      imageUrl,
+      description,
+    })
     .then(() => {
       console.log("Product Created!");
       res.redirect("/");
@@ -38,8 +39,10 @@ function getEditProduct(req, res) {
 
   if (!editMode) return res.redirect("/");
 
-  Product.findByPk(id)
-    .then((product) => {
+  req.user
+    .getProducts({ where: { id } })
+    .then((products) => {
+      const product = products[0];
       if (!product) return res.redirect("/");
 
       res.render("admin/edit-product", {
@@ -92,7 +95,8 @@ function postDeleteProduct(req, res) {
 }
 
 function getProducts(_req, res) {
-  Product.findAll()
+  req.user
+    .getProducts()
     .then((products) => {
       res.render("admin/product-list", {
         hasProducts: products.length > 0,
