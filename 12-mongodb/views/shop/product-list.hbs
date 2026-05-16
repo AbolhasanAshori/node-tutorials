@@ -14,8 +14,8 @@
             <p class="product__description">{{this.description}}</p>
           </div>
           <div class="card__actions">
-            <a class="btn" href="/products/{{this.id}}">Details</a>
-            {{> add-to-cart id=this.id }}
+            <a class="btn" href="/products/{{this._id}}">Details</a>
+            {{> add-to-cart id=this._id }}
           </div>
         </article>
       {{/each}}
