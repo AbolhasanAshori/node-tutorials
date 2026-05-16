@@ -121,14 +121,47 @@ function postCartDeleteProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
-function getOrders(_req, res) {
-  res.render("shop/orders", {
-    title: "Orders",
-    path: "/orders",
-    config: {
-      activePath: { orders: true },
-    },
-  });
+function getOrders(req, res) {
+  req.user
+    .getOrders({ include: ["products"] })
+    .then((orders) => {
+      res.render("shop/orders", {
+        title: "Orders",
+        path: "/orders",
+        hasOrders: orders.length > 0,
+        orders,
+        config: {
+          activePath: { orders: true },
+        },
+      });
+    })
+    .catch((err) => console.error(err));
+}
+
+function postOrder(req, res) {
+  let fetchedCart;
+
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return Promise.all([cart.getProducts(), req.user.createOrder()]);
+    })
+    .then(([products, order]) => {
+      return order.addProducts(
+        products.map((product) => {
+          product.orderItem = { quantity: product.cartItem.quantity };
+          return product;
+        }),
+      );
+    })
+    .then(() => {
+      return fetchedCart.setProducts(null);
+    })
+    .then(() => {
+      res.redirect("/orders");
+    })
+    .catch((err) => console.error(err));
 }
 
 function getCheckout(_req, res) {
@@ -146,5 +179,6 @@ module.exports = {
   postCart,
   postCartDeleteProduct,
   getOrders,
+  postOrder,
   getCheckout,
 };
