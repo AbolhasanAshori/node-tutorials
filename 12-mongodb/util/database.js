@@ -1,13 +1,15 @@
-const os = require("node:os");
+const { MongoClient } = require("mongodb");
 
-const { Sequelize } = require("sequelize");
+const uri = "mongodb://localhost:27017";
 
-const dbType = os.platform() === "linux" ? "mariadb" : "mysql";
+function mongoConnect(callback) {
+  new MongoClient(uri)
+    .connect()
+    .then((client) => {
+      console.log("Successfully connected to MongoDB!");
+      callback(client);
+    })
+    .catch((err) => console.error(err));
+}
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-  host: process.env.DB_HOST,
-  port: +(process.env.DB_PORT ?? 3306),
-  dialect: process.env.DB_TYPE ?? dbType,
-});
-
-module.exports = sequelize;
+module.exports = mongoConnect;
