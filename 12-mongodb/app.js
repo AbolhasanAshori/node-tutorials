@@ -3,8 +3,8 @@ const path = require("node:path");
 const express = require("express");
 const { engine } = require("express-handlebars");
 const { getNotFound } = require("./controllers/error");
-// const { adminRoutes, shopRoutes } = require("./routes");
-const mongoConnect = require("./util/database");
+const { adminRoutes } = require("./routes");
+const { mongoConnect } = require("./util/database");
 
 const app = express();
 app.engine(
@@ -25,13 +25,12 @@ app.set("views", "views");
 app.use(express.urlencoded());
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use("/admin", adminRoutes);
+app.use("/admin", adminRoutes);
 // app.use(shopRoutes);
 
 app.use(getNotFound);
 
-mongoConnect((client) => {
-  console.log(client);
+mongoConnect(() => {
   app.listen(3000, () => {
     console.log("Server running at http://localhost:3000");
   });

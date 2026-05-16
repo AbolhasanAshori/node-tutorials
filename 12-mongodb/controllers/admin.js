@@ -19,13 +19,9 @@ function getAddProduct(_req, res) {
 
 function postAddProduct(req, res) {
   const { title, imageUrl, description, price } = req.body;
-  req.user
-    .createProduct({
-      title,
-      price,
-      imageUrl,
-      description,
-    })
+  const product = new Product(title, price, imageUrl, description);
+  product
+    .save()
     .then(() => {
       console.log("Product Created!");
       res.redirect("/");
