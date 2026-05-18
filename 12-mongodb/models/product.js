@@ -1,9 +1,20 @@
 const { ObjectId } = require("mongodb");
 const { getDb } = require("../util/database");
 
+/**
+ * @typedef ProductProps
+ * @type {Object}
+ * @property {string} [id]
+ * @property {string} title
+ * @property {number} price
+ * @property {string} imageUrl
+ * @property {string} description
+ */
+
 class Product {
+  /** @param {ProductProps} props */
   constructor(props) {
-    this._id = new ObjectId(props.id);
+    this._id = props.id ? new ObjectId(props.id) : null;
     this.title = props.title;
     this.price = props.price;
     this.imageUrl = props.imageUrl;
