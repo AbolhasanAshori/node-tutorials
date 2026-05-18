@@ -83,6 +83,10 @@ class User {
     return User.#getCollection().updateOne({ _id: this._id }, { $set: { cart: { items: updatedCartItems } } });
   }
 
+  getOrders() {
+    return User.#getCollection("orders").find({ "user._id": this._id }).toArray();
+  }
+
   addOrder() {
     return this.getCart()
       .then((products) => {
@@ -97,7 +101,7 @@ class User {
         return User.#getCollection("orders").insertOne(order);
       })
       .then(() => {
-        this.cart = { item: [] };
+        this.cart = { items: [] };
         return User.#getCollection().updateOne({ _id: this._id }, { $set: { cart: this.cart } });
       });
   }
