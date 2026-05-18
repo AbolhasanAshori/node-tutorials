@@ -56,6 +56,9 @@ mongoConnect((_client, db) => {
           id: "5baa2528563f16379fc8a610",
           email: "test@example.com",
           username: "test",
+          cart: {
+            items: [],
+          },
         }),
       );
     })
