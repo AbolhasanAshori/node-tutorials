@@ -32,6 +32,7 @@ app.use((req, _res, next) => {
     .then((user) => {
       req.user = new User({
         ...user,
+        username: user.name,
         id: user._id.toString(),
       });
       next();
