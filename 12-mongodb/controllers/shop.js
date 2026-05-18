@@ -111,25 +111,8 @@ function getOrders(req, res) {
 }
 
 function postOrder(req, res) {
-  let fetchedCart;
-
   req.user
-    .getCart()
-    .then((cart) => {
-      fetchedCart = cart;
-      return Promise.all([cart.getProducts(), req.user.createOrder()]);
-    })
-    .then(([products, order]) => {
-      return order.addProducts(
-        products.map((product) => {
-          product.orderItem = { quantity: product.cartItem.quantity };
-          return product;
-        }),
-      );
-    })
-    .then(() => {
-      return fetchedCart.setProducts(null);
-    })
+    .addOrder()
     .then(() => {
       res.redirect("/orders");
     })

@@ -83,6 +83,25 @@ class User {
     return User.#getCollection().updateOne({ _id: this._id }, { $set: { cart: { items: updatedCartItems } } });
   }
 
+  addOrder() {
+    return this.getCart()
+      .then((products) => {
+        const order = {
+          items: products,
+          user: {
+            _id: this._id,
+            name: this.name,
+            email: this.email,
+          },
+        };
+        return User.#getCollection("orders").insertOne(order);
+      })
+      .then(() => {
+        this.cart = { item: [] };
+        return User.#getCollection().updateOne({ _id: this._id }, { $set: { cart: this.cart } });
+      });
+  }
+
   save() {
     const collection = User.#getCollection();
 
