@@ -119,13 +119,6 @@ function postOrder(req, res) {
     .catch((err) => console.error(err));
 }
 
-function getCheckout(_req, res) {
-  res.render("shop/checkout", {
-    title: "Checkout",
-    path: "/checkout",
-  });
-}
-
 module.exports = {
   getProducts,
   getProductItem,
@@ -135,5 +128,4 @@ module.exports = {
   postCartDeleteProduct,
   getOrders,
   postOrder,
-  getCheckout,
 };
