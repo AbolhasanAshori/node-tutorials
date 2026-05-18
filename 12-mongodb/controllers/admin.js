@@ -19,7 +19,7 @@ function getAddProduct(_req, res) {
 
 function postAddProduct(req, res) {
   const { title, imageUrl, description, price } = req.body;
-  const product = new Product({ title, price: +price, imageUrl, description });
+  const product = new Product({ title, price: +price, imageUrl, description, userId: req.user._id });
   product
     .save()
     .then(() => {

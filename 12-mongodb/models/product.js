@@ -9,6 +9,7 @@ const { getDb } = require("../util/database");
  * @property {number} price
  * @property {string} imageUrl
  * @property {string} description
+ * @property {string} userId
  */
 
 class Product {
@@ -19,6 +20,7 @@ class Product {
     this.price = props.price;
     this.imageUrl = props.imageUrl;
     this.description = props.description;
+    this.userId = props.userId;
   }
 
   save() {
