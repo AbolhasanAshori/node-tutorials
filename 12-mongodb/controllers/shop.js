@@ -86,14 +86,7 @@ function postCartDeleteProduct(req, res) {
   const id = req.body.productId;
 
   req.user
-    .getCart()
-    .then((cart) => {
-      return cart.getProducts({ where: { id } });
-    })
-    .then((products) => {
-      const product = products[0];
-      return product.cartItem.destroy();
-    })
+    .deleteCartItem(id)
     .then(() => {
       res.redirect("/cart");
     })

@@ -76,6 +76,13 @@ class User {
     return User.#getCollection().updateOne({ _id: this._id }, { $set: { cart: updatedCart } });
   }
 
+  /** @param {string} id  */
+  deleteCartItem(id) {
+    const updatedCartItems = this.cart.items.filter((item) => !item.productId.equals(id));
+
+    return User.#getCollection().updateOne({ _id: this._id }, { $set: { cart: { items: updatedCartItems } } });
+  }
+
   save() {
     const collection = User.#getCollection();
 
