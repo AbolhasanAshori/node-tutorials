@@ -30,14 +30,29 @@ class User {
     this.cart = props.cart;
   }
 
-  static #getCollection() {
+  /** @param {string} name */
+  static #getCollection(name = "users") {
     const db = getDb();
-    return db.collection("users");
+    return db.collection(name);
   }
 
   /** @param {string} id  */
   static findById(id) {
     return User.#getCollection().findOne({ _id: new ObjectId(id) });
+  }
+
+  getCart() {
+    const ids = this.cart.items.map((item) => item.productId);
+
+    return User.#getCollection("products")
+      .find({ _id: { $in: ids } })
+      .toArray()
+      .then((products) =>
+        products.map((product) => ({
+          ...product,
+          quantity: this.cart.items.find((item) => item.productId.equals(product._id)).quantity,
+        })),
+      );
   }
 
   /** @param {Product} product */
