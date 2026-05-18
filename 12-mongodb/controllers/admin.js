@@ -23,7 +23,6 @@ function postAddProduct(req, res) {
   product
     .save()
     .then(() => {
-      console.log("Product Created!");
       res.redirect("/");
     })
     .catch((err) => console.error(err));
@@ -70,7 +69,6 @@ function postEditProduct(req, res) {
   product
     .save()
     .then(() => {
-      console.log("Product Updated!");
       res.redirect("/admin/products");
     })
     .catch((err) => console.error(err));

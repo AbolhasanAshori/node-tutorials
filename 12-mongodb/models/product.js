@@ -40,25 +40,13 @@ class Product {
       dbPromise = db.collection("products").insertOne(this);
     }
 
-    return dbPromise
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => console.error(err));
+    return dbPromise;
   }
 
   static fetchAll() {
     const db = getDb();
 
-    return db
-      .collection("products")
-      .find()
-      .toArray()
-      .then((products) => {
-        console.log(products);
-        return products;
-      })
-      .catch(console.error);
+    return db.collection("products").find().toArray();
   }
 
   /** @param {string} id  */
@@ -68,24 +56,13 @@ class Product {
     return db
       .collection("products")
       .find({ _id: new ObjectId(id) })
-      .next()
-      .then((product) => {
-        console.log(product);
-        return product;
-      })
-      .catch(console.error);
+      .next();
   }
 
   /** @param {string} id  */
   static deleteById(id) {
     const db = getDb();
-    return db
-      .collection("products")
-      .deleteOne({ _id: new ObjectId(id) })
-      .then(() => {
-        console.log("Product Deleted!");
-      })
-      .catch(console.error);
+    return db.collection("products").deleteOne({ _id: new ObjectId(id) });
   }
 }
 
