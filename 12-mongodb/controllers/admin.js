@@ -19,7 +19,7 @@ function getAddProduct(_req, res) {
 
 function postAddProduct(req, res) {
   const { title, imageUrl, description, price } = req.body;
-  const product = new Product(title, price, imageUrl, description);
+  const product = new Product({ title, price: +price, imageUrl, description });
   product
     .save()
     .then(() => {
@@ -35,10 +35,8 @@ function getEditProduct(req, res) {
 
   if (!editMode) return res.redirect("/");
 
-  req.user
-    .getProducts({ where: { id } })
-    .then((products) => {
-      const product = products[0];
+  Product.findById(id)
+    .then((product) => {
       if (!product) return res.redirect("/");
 
       res.render("admin/edit-product", {
@@ -61,16 +59,16 @@ function postEditProduct(req, res) {
   const id = req.body.productId;
   const { title, imageUrl, price, description } = req.body;
 
-  Product.findByPk(id)
-    .then((product) => {
-      Object.assign(product, {
-        title,
-        price,
-        imageUrl,
-        description,
-      });
-      return product.save();
-    })
+  const product = new Product({
+    id,
+    title,
+    price,
+    imageUrl,
+    description,
+  });
+
+  product
+    .save()
     .then(() => {
       console.log("Product Updated!");
       res.redirect("/admin/products");
@@ -80,19 +78,15 @@ function postEditProduct(req, res) {
 
 function postDeleteProduct(req, res) {
   const id = req.body.productId;
-  Product.findByPk(id)
-    .then((product) => {
-      return product.destroy();
-    })
+  Product.deleteById(id)
     .then(() => {
       res.redirect("/admin/products");
     })
     .catch((err) => console.error(err));
 }
 
-function getProducts(req, res) {
-  req.user
-    .getProducts()
+function getProducts(_req, res) {
+  Product.fetchAll()
     .then((products) => {
       res.render("admin/product-list", {
         hasProducts: products.length > 0,
