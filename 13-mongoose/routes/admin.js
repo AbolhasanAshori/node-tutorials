@@ -1,11 +1,12 @@
 const express = require("express");
+const { getAddProduct, postAddProduct } = require("../controllers/admin");
 
 const router = express.Router();
 
-router;
-// .get("/products", getProducts)
-// .get("/add-product", getAddProduct)
-// .post("/add-product", postAddProduct)
+router
+  // .get("/products", getProducts)
+  .get("/add-product", getAddProduct)
+  .post("/add-product", postAddProduct);
 // .get("/edit-product/:productId", getEditProduct)
 // .post("/edit-product", postEditProduct)
 // .post("/delete-product", postDeleteProduct);
