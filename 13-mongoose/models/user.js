@@ -41,4 +41,17 @@ userSchema.methods.addToCart = function (product) {
   return this.save();
 };
 
+/** @param {string} id */
+userSchema.methods.deleteCartItem = function (id) {
+  const updatedCartItems = this.cart.items.filter((item) => !item.productId.equals(id));
+
+  this.cart.items = updatedCartItems;
+  return this.save();
+};
+
+userSchema.methods.clearCart = function () {
+  this.cart = { items: [] };
+  return this.save();
+};
+
 module.exports = model("User", userSchema);
