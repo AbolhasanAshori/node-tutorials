@@ -16,6 +16,9 @@
     {{#if config.css.orders}}
       <link rel="stylesheet" href="/css/orders.css" />
     {{/if}}
+    {{#if config.css.auth}}
+      <link rel="stylesheet" href="/css/auth.css" />
+    {{/if}}
   </head>
   <body>
     <header class="main-header">
@@ -30,7 +33,7 @@
           <li class="main-header__item"><a class="{{#if config.activePath.adminProductList}}active{{/if}}" href="/admin/products">Admin Products</a></li> --}}
         </ul>
         <ul class="main-header__item-list">
-          <li class="main-header__item"><a href="/login">Login</a></li>
+          <li class="main-header__item"><a class="{{#if config.activePath.login}}active{{/if}}" href="/login">Login</a></li>
         </ul>
       </nav>
     </header>

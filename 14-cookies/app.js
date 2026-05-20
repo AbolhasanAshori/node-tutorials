@@ -3,7 +3,7 @@ const path = require("node:path");
 const express = require("express");
 const { engine } = require("express-handlebars");
 const { getNotFound } = require("./controllers/error");
-const { adminRoutes, shopRoutes } = require("./routes");
+const { adminRoutes, shopRoutes, authRoutes } = require("./routes");
 const { default: mongoose, Types } = require("mongoose");
 const { createDbConnectionUri } = require("./util/database");
 const User = require("./models/user");
@@ -38,6 +38,7 @@ app.use((req, _res, next) => {
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
+app.use(authRoutes);
 
 app.use(getNotFound);
 
