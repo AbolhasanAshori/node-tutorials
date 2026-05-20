@@ -4,8 +4,8 @@ const express = require("express");
 const { engine } = require("express-handlebars");
 const { getNotFound } = require("./controllers/error");
 const { adminRoutes, shopRoutes } = require("./routes");
-const User = require("./models/user");
 const { default: mongoose } = require("mongoose");
+const { createDbConnectionUri } = require("./util/database");
 
 const app = express();
 app.engine(
@@ -26,18 +26,18 @@ app.set("views", "views");
 app.use(express.urlencoded());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, _res, next) => {
-  User.findById("5baa2528563f16379fc8a610")
-    .then((user) => {
-      req.user = new User({
-        ...user,
-        username: user.name,
-        id: user._id.toString(),
-      });
-      next();
-    })
-    .catch(console.error);
-});
+// app.use((req, _res, next) => {
+//   User.findById("5baa2528563f16379fc8a610")
+//     .then((user) => {
+//       req.user = new User({
+//         ...user,
+//         username: user.name,
+//         id: user._id.toString(),
+//       });
+//       next();
+//     })
+//     .catch(console.error);
+// });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -45,7 +45,14 @@ app.use(shopRoutes);
 app.use(getNotFound);
 
 mongoose
-  .connect("mongodb://localhost:27017")
+  .connect(
+    createDbConnectionUri({
+      hostname: process.env.DB_HOST ?? "127.0.0.1",
+      port: process.env.DB_PORT ?? 27017,
+      dbName: process.env.DB_NAME ?? "test",
+      dbType: process.env.DB_TYPE ?? "mongodb",
+    }),
+  )
   .then(() => {
     console.log("Successfully connected to MongoDB using Mongoose!");
     app.listen(3000, () => {
