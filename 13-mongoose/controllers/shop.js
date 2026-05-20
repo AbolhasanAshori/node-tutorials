@@ -34,7 +34,7 @@ function getProductItem(req, res) {
 }
 
 function getIndex(_req, res) {
-  Product.findOneAndReplace()
+  Product.find()
     .then((products) => {
       res.render("shop/index", {
         title: "Shop",
