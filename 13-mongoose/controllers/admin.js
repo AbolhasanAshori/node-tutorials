@@ -81,8 +81,13 @@ function postDeleteProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
-function getProducts(_req, res) {
-  Product.find()
+function getProducts(req, res) {
+  Product.find({
+    userId: req.user._id,
+  })
+    // .select("title price -_id")
+    // .populate("userId", "name")
+    .populate("userId")
     .then((products) => {
       res.render("admin/product-list", {
         hasProducts: products.length > 0,
