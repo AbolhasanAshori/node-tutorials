@@ -1,0 +1,47 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    {{#if config.css.product}}
+      <link rel="stylesheet" href="/css/product.css" />
+    {{/if}}
+    {{#if config.css.forms}}
+      <link rel="stylesheet" href="/css/forms.css" />
+    {{/if}}
+    {{#if config.css.cart}}
+      <link rel="stylesheet" href="/css/cart.css" />
+    {{/if}}
+    {{#if config.css.orders}}
+      <link rel="stylesheet" href="/css/orders.css" />
+    {{/if}}
+  </head>
+  <body>
+    <header class="main-header">
+      <button id="side-menu-toggle">Menu</button>
+      <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+          <li class="main-header__item"><a class="{{#if config.activePath.shop}}active{{/if}}" href="/">Shop</a></li>
+          <li class="main-header__item"><a class="{{#if config.activePath.productList}}active{{/if}}" href="/products">Products</a></li>
+          <li class="main-header__item"><a class="{{#if config.activePath.cart}}active{{/if}}" href="/cart">Cart</a></li>
+          <li class="main-header__item"><a class="{{#if config.activePath.orders}}active{{/if}}" href="/orders">Orders</a></li>
+          <li class="main-header__item"><a class="{{#if config.activePath.addProduct}}active{{/if}}" href="/admin/add-product">Add Product</a></li>
+          <li class="main-header__item"><a class="{{#if config.activePath.adminProductList}}active{{/if}}" href="/admin/products">Admin Products</a></li>
+        </ul>
+      </nav>
+    </header>
+    <nav class="mobile-nav">
+      <ul class="mobile-nav__item-list">
+        <li class="mobile-nav__item"><a class="{{#if config.activePath.shop}}active{{/if}}" href="/">Shop</a></li>
+        <li class="mobile-nav__item"><a class="{{#if config.activePath.productList}}active{{/if}}" href="/products">Products</a></li>
+        <li class="mobile-nav__item"><a class="{{#if config.activePath.cart}}active{{/if}}" href="/cart">Cart</a></li>
+        <li class="mobile-nav__item"><a class="{{#if config.activePath.orders}}active{{/if}}" href="/orders">Orders</a></li>
+        <li class="mobile-nav__item"><a class="{{#if config.activePath.addProduct}}active{{/if}}" href="/admin/add-product">Add Product</a></li>
+        <li class="mobile-nav__item"><a class="{{#if config.activePath.adminProductList}}active{{/if}}" href="/admin/products">Admin Products</a></li>
+      </ul>
+    </nav>
+    {{{body}}}
+    <script src="/js/main.js"></script>
+  </body>
+</html>
