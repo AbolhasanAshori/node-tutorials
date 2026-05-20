@@ -1,12 +1,12 @@
 <main>
   {{#if hasOrders}}
-    <ul>
+    <ul class="orders">
       {{#each orders as |order|}}
-        <li>
+        <li class="orders__item">
           <h1># {{order._id}}</h1>
-          <ul>
+          <ul class="orders__products">
             {{#each order.products as |product|}}
-              <li>{{product.product.title}} ({{product.quantity}})</li>
+              <li class="orders__products-item">{{product.product.title}} ({{product.quantity}})</li>
             {{/each}}
           </ul>
         </li>

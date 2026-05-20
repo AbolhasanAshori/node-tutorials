@@ -106,6 +106,7 @@ function getOrders(req, res) {
         orders,
         config: {
           activePath: { orders: true },
+          css: { orders: true },
         },
       });
     })
