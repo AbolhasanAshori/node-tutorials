@@ -4,9 +4,8 @@ const express = require("express");
 const { engine } = require("express-handlebars");
 const { getNotFound } = require("./controllers/error");
 const { adminRoutes, shopRoutes } = require("./routes");
-const { mongoConnect } = require("./util/database");
 const User = require("./models/user");
-const { ObjectId } = require("mongodb");
+const { default: mongoose } = require("mongoose");
 
 const app = express();
 app.engine(
@@ -45,28 +44,12 @@ app.use(shopRoutes);
 
 app.use(getNotFound);
 
-mongoConnect((_client, db) => {
-  const users = db.collection("users");
-
-  users
-    .findOne({ _id: new ObjectId("5baa2528563f16379fc8a610") }, { projection: { _id: 1 } })
-    .then((user) => {
-      if (user) return;
-      return users.insertOne(
-        new User({
-          id: "5baa2528563f16379fc8a610",
-          email: "test@example.com",
-          username: "test",
-          cart: {
-            items: [],
-          },
-        }),
-      );
-    })
-    .then(() => {
-      app.listen(3000, () => {
-        console.log("Server running at http://localhost:3000");
-      });
-    })
-    .catch(console.error);
-});
+mongoose
+  .connect("mongodb://localhost:27017")
+  .then(() => {
+    console.log("Successfully connected to MongoDB using Mongoose!");
+    app.listen(3000, () => {
+      console.log("Server running at http://localhost:3000");
+    });
+  })
+  .catch(console.error);
