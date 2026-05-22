@@ -9,8 +9,8 @@ function getLogin(req, res) {
   });
 }
 
-function postLogin(_req, res) {
-  res.cookie("loggedIn", "true", { httpOnly: true });
+function postLogin(req, res) {
+  req.session.isLoggedIn = true;
   res.redirect("/");
 }
 

@@ -8,6 +8,7 @@ const { default: mongoose, Types } = require("mongoose");
 const { createDbConnectionUri } = require("./util/database");
 const User = require("./models/user");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 const app = express();
 app.engine(
@@ -25,9 +26,16 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", "views");
 
-app.use(cookieParser());
 app.use(express.urlencoded());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
 
 app.use((req, _res, next) => {
   User.findById("5baa2528563f16379fc8a610")
