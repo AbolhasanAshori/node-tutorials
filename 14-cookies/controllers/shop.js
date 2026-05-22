@@ -1,12 +1,12 @@
 const { Order } = require("../models");
 const Product = require("../models/product");
 
-function getProducts(_req, res) {
+function getProducts(req, res) {
   Product.find()
     .then((products) => {
       res.render("shop/product-list", {
         title: "All Products",
-        path: "/product",
+        isAuthenticated: req.cookies.loggedIn === "true",
         hasProducts: products.length > 0,
         products,
         config: {
@@ -25,7 +25,7 @@ function getProductItem(req, res) {
       res.render("shop/product-detail", {
         product: product,
         title: product.title,
-        path: "/products",
+        isAuthenticated: req.cookies.loggedIn === "true",
         config: {
           activePath: { productList: true },
         },
@@ -34,12 +34,12 @@ function getProductItem(req, res) {
     .catch((err) => console.error(err));
 }
 
-function getIndex(_req, res) {
+function getIndex(req, res) {
   Product.find()
     .then((products) => {
       res.render("shop/index", {
         title: "Shop",
-        path: "/",
+        isAuthenticated: req.cookies.loggedIn === "true",
         hasProducts: products.length > 0,
         products,
         config: {
@@ -59,13 +59,11 @@ function getCart(req, res) {
 
       res.render("shop/cart", {
         title: "Your Cart",
-        path: "/cart",
+        isAuthenticated: req.cookies.loggedIn === "true",
         products,
         hasProducts: products.length > 0,
         config: {
-          css: {
-            cart: true,
-          },
+          css: { cart: true },
           activePath: { cart: true },
         },
       });
@@ -101,7 +99,7 @@ function getOrders(req, res) {
     .then((orders) => {
       res.render("shop/orders", {
         title: "Orders",
-        path: "/orders",
+        isAuthenticated: req.cookies.loggedIn === "true",
         hasOrders: orders.length > 0,
         orders,
         config: {

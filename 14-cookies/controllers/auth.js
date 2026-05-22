@@ -1,7 +1,7 @@
-function getLogin(_req, res) {
+function getLogin(req, res) {
   res.render("auth/login", {
     title: "Login",
-    path: "/login",
+    isAuthenticated: req.cookies.loggedIn === "true",
     config: {
       activePath: { login: true },
       css: { forms: true, auth: true },
@@ -9,6 +9,12 @@ function getLogin(_req, res) {
   });
 }
 
+function postLogin(_req, res) {
+  res.cookie("loggedIn", "true");
+  res.redirect("/");
+}
+
 module.exports = {
   getLogin,
+  postLogin,
 };

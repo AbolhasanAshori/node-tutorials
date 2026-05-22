@@ -1,10 +1,10 @@
 const Product = require("../models/product");
 
-function getAddProduct(_req, res) {
+function getAddProduct(req, res) {
   res.render("admin/edit-product", {
     title: "Add Product",
-    path: "/admin/add-product",
     editing: false,
+    isAuthenticated: req.cookies.loggedIn === "true",
     config: {
       css: {
         product: true,
@@ -40,8 +40,8 @@ function getEditProduct(req, res) {
 
       res.render("admin/edit-product", {
         title: "Update Product",
-        path: "/admin/edit-product",
         editing: editMode,
+        isAuthenticated: req.cookies.loggedIn === "true",
         product,
         config: {
           css: {
@@ -93,7 +93,7 @@ function getProducts(req, res) {
         hasProducts: products.length > 0,
         products,
         title: "Admin Products",
-        path: "/admin/product",
+        isAuthenticated: req.cookies.loggedIn === "true",
         config: {
           css: { product: true },
           activePath: { adminProductList: true },

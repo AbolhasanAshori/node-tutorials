@@ -7,6 +7,7 @@ const { adminRoutes, shopRoutes, authRoutes } = require("./routes");
 const { default: mongoose, Types } = require("mongoose");
 const { createDbConnectionUri } = require("./util/database");
 const User = require("./models/user");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.engine(
@@ -24,6 +25,7 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", "views");
 
+app.use(cookieParser());
 app.use(express.urlencoded());
 app.use(express.static(path.join(__dirname, "public")));
 
