@@ -18,7 +18,10 @@ function postLogin(req, res) {
     .then((user) => {
       req.session.isLoggedIn = true;
       req.session.userId = user.id;
-      res.redirect("/");
+      req.session.save((err) => {
+        if (err) console.error(err);
+        res.redirect("/");
+      });
     })
     .catch(console.error);
 }

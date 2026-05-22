@@ -4,7 +4,7 @@ const { User } = require("../models");
 function authenticateUser(req, res, next) {
   if (!req.session.userId) return next();
 
-  User.findById("5baa2528563f16379fc8a610")
+  User.findById(req.session.userId)
     .then((user) => {
       if (user) {
         req.user = user;
