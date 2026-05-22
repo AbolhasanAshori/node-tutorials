@@ -10,7 +10,7 @@ function getLogin(req, res) {
 }
 
 function postLogin(_req, res) {
-  res.cookie("loggedIn", "true");
+  res.cookie("loggedIn", "true", { httpOnly: true });
   res.redirect("/");
 }
 
