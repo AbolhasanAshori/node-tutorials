@@ -23,7 +23,17 @@ function postLogin(req, res) {
     .catch(console.error);
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
+function postLogout(req, res) {
+  req.session.destroy((err) => {
+    if (err) console.error(err);
+
+    res.redirect("/");
+  });
+}
+
 module.exports = {
   getLogin,
   postLogin,
+  postLogout,
 };
