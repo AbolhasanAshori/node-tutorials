@@ -13,11 +13,9 @@
             <h2 class="product__price">${{this.price}}</h2>
             <p class="product__description">{{this.description}}</p>
           </div>
-          {{#if isAuthenticated}}
-            <div class="card__actions">
-              {{> add-to-cart id=this._id }}
-            </div>
-          {{/if}}
+          <div class="card__actions">
+            {{> add-to-cart id=this._id }}
+          </div>
         </article>
       {{/each}}
     </div>
