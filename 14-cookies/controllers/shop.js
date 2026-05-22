@@ -1,12 +1,13 @@
 const { Order } = require("../models");
 const Product = require("../models/product");
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getProducts(req, res) {
   Product.find()
     .then((products) => {
       res.render("shop/product-list", {
         title: "All Products",
-        isAuthenticated: req.cookies.loggedIn === "true",
+        isAuthenticated: req.session.isLoggedIn,
         hasProducts: products.length > 0,
         products,
         config: {
@@ -18,6 +19,7 @@ function getProducts(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getProductItem(req, res) {
   const id = req.params.productId;
   Product.findById(id)
@@ -25,7 +27,7 @@ function getProductItem(req, res) {
       res.render("shop/product-detail", {
         product: product,
         title: product.title,
-        isAuthenticated: req.cookies.loggedIn === "true",
+        isAuthenticated: req.session.isLoggedIn,
         config: {
           activePath: { productList: true },
         },
@@ -34,12 +36,13 @@ function getProductItem(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getIndex(req, res) {
   Product.find()
     .then((products) => {
       res.render("shop/index", {
         title: "Shop",
-        isAuthenticated: req.cookies.loggedIn === "true",
+        isAuthenticated: req.session.isLoggedIn,
         hasProducts: products.length > 0,
         products,
         config: {
@@ -51,7 +54,10 @@ function getIndex(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getCart(req, res) {
+  if (!req.user) return res.sendStatus(401);
+
   req.user
     .populate("cart.items.productId")
     .then((user) => {
@@ -59,7 +65,7 @@ function getCart(req, res) {
 
       res.render("shop/cart", {
         title: "Your Cart",
-        isAuthenticated: req.cookies.loggedIn === "true",
+        isAuthenticated: req.session.isLoggedIn,
         products,
         hasProducts: products.length > 0,
         config: {
@@ -71,6 +77,7 @@ function getCart(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function postCart(req, res) {
   const id = req.body.productId;
   Product.findById(id)
@@ -83,7 +90,10 @@ function postCart(req, res) {
     .catch(console.error);
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function postCartDeleteProduct(req, res) {
+  if (!req.user) return res.sendStatus(401);
+
   const id = req.body.productId;
 
   req.user
@@ -94,12 +104,15 @@ function postCartDeleteProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getOrders(req, res) {
+  if (!req.user) return res.sendStatus(401);
+
   Order.find({ "user.userId": req.user._id })
     .then((orders) => {
       res.render("shop/orders", {
         title: "Orders",
-        isAuthenticated: req.cookies.loggedIn === "true",
+        isAuthenticated: req.session.isLoggedIn,
         hasOrders: orders.length > 0,
         orders,
         config: {
@@ -111,7 +124,10 @@ function getOrders(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function postOrder(req, res) {
+  if (!req.user) return res.sendStatus(401);
+
   req.user
     .populate("cart.items.productId")
     .then((user) => {
@@ -126,7 +142,7 @@ function postOrder(req, res) {
       return order.save();
     })
     .then(() => {
-      return req.user.clearCart();
+      return req.user.clearCart;
     })
     .then(() => {
       res.redirect("/orders");

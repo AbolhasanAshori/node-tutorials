@@ -19,7 +19,7 @@ const userSchema = new Schema({
   },
 });
 
-/** @param {Product} product */
+/** @type {import('./user').IUser['addToCart']} */
 userSchema.methods.addToCart = function (product) {
   let newQuantity = 1;
   const updatedCartItems = [...this.cart.items];
@@ -41,7 +41,7 @@ userSchema.methods.addToCart = function (product) {
   return this.save();
 };
 
-/** @param {string} id */
+/** @type {import('./user').IUser['deleteCartItem']} */
 userSchema.methods.deleteCartItem = function (id) {
   const updatedCartItems = this.cart.items.filter((item) => !item.productId.equals(id));
 
@@ -49,6 +49,7 @@ userSchema.methods.deleteCartItem = function (id) {
   return this.save();
 };
 
+/** @type {import('./user').IUser['clearCart']} */
 userSchema.methods.clearCart = function () {
   this.cart = { items: [] };
   return this.save();

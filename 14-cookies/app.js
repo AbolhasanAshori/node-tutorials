@@ -9,7 +9,8 @@ const { createDbConnectionUri } = require("./util/database");
 const User = require("./models/user");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const MongoDBStore = require("connect-mongodb-session")(session);
+const { MongoStore } = require("connect-mongo");
+const { authenticateUser } = require("./middleware/auth");
 
 const MONGODB_URI = createDbConnectionUri({
   hostname: process.env.DB_HOST ?? "127.0.0.1",
@@ -19,10 +20,10 @@ const MONGODB_URI = createDbConnectionUri({
 });
 
 const app = express();
-const store = new MongoDBStore({
-  uri: MONGODB_URI,
-  collection: "sessions",
-  expires: 1000 * 60 * 60 * 24 * 14,
+const store = MongoStore.create({
+  mongoUrl: MONGODB_URI,
+  collectionName: "sessions",
+  ttl: 1000 * 60 * 60 * 24 * 14,
 });
 
 app.engine(
@@ -57,15 +58,7 @@ app.use(
     },
   }),
 );
-
-app.use((req, _res, next) => {
-  User.findById("5baa2528563f16379fc8a610")
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch(console.error);
-});
+app.use(authenticateUser);
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);

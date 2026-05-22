@@ -1,10 +1,11 @@
 const Product = require("../models/product");
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getAddProduct(req, res) {
   res.render("admin/edit-product", {
     title: "Add Product",
     editing: false,
-    isAuthenticated: req.cookies.loggedIn === "true",
+    isAuthenticated: req.session.isLoggedIn,
     config: {
       css: {
         product: true,
@@ -17,6 +18,7 @@ function getAddProduct(req, res) {
   });
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function postAddProduct(req, res) {
   const { title, imageUrl, description, price } = req.body;
   const product = new Product({ title, price: +price, imageUrl, description, userId: req.user });
@@ -28,6 +30,7 @@ function postAddProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getEditProduct(req, res) {
   const id = req.params.productId;
   const editMode = req.query.edit === "true";
@@ -41,7 +44,7 @@ function getEditProduct(req, res) {
       res.render("admin/edit-product", {
         title: "Update Product",
         editing: editMode,
-        isAuthenticated: req.cookies.loggedIn === "true",
+        isAuthenticated: req.session.isLoggedIn,
         product,
         config: {
           css: {
@@ -54,6 +57,7 @@ function getEditProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function postEditProduct(req, res) {
   const id = req.body.productId;
   const { title, imageUrl, price, description } = req.body;
@@ -72,6 +76,7 @@ function postEditProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function postDeleteProduct(req, res) {
   const id = req.body.productId;
   Product.findByIdAndDelete(id)
@@ -81,6 +86,7 @@ function postDeleteProduct(req, res) {
     .catch((err) => console.error(err));
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
 function getProducts(req, res) {
   Product.find({
     userId: req.user._id,
@@ -93,7 +99,7 @@ function getProducts(req, res) {
         hasProducts: products.length > 0,
         products,
         title: "Admin Products",
-        isAuthenticated: req.cookies.loggedIn === "true",
+        isAuthenticated: req.session.isLoggedIn,
         config: {
           css: { product: true },
           activePath: { adminProductList: true },
