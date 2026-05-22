@@ -15,7 +15,9 @@
           </div>
           <div class="card__actions">
             <a class="btn" href="/products/{{this._id}}">Details</a>
-            {{> add-to-cart id=this._id }}
+            {{#if isAuthenticated}}
+              {{> add-to-cart id=this._id }}
+            {{/if}}
           </div>
         </article>
       {{/each}}
