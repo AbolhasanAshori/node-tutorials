@@ -9,8 +9,22 @@ const { createDbConnectionUri } = require("./util/database");
 const User = require("./models/user");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
+const MONGODB_URI = createDbConnectionUri({
+  hostname: process.env.DB_HOST ?? "127.0.0.1",
+  port: process.env.DB_PORT ?? 27017,
+  dbName: process.env.DB_NAME ?? "test",
+  dbType: process.env.DB_TYPE ?? "mongodb",
+});
 
 const app = express();
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+  expires: 1000 * 60 * 60 * 24 * 14,
+});
+
 app.engine(
   "hbs",
   engine({
@@ -34,6 +48,13 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 14,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
   }),
 );
 
@@ -53,14 +74,7 @@ app.use(authRoutes);
 app.use(getNotFound);
 
 mongoose
-  .connect(
-    createDbConnectionUri({
-      hostname: process.env.DB_HOST ?? "127.0.0.1",
-      port: process.env.DB_PORT ?? 27017,
-      dbName: process.env.DB_NAME ?? "test",
-      dbType: process.env.DB_TYPE ?? "mongodb",
-    }),
-  )
+  .connect(MONGODB_URI)
   .then(() => {
     console.log("Successfully connected to MongoDB using Mongoose!");
 
