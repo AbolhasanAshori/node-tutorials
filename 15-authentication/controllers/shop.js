@@ -56,8 +56,6 @@ function getIndex(req, res) {
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function getCart(req, res) {
-  if (!req.user) return res.sendStatus(401);
-
   req.user
     .populate("cart.items.productId")
     .then((user) => {
@@ -92,8 +90,6 @@ function postCart(req, res) {
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function postCartDeleteProduct(req, res) {
-  if (!req.user) return res.sendStatus(401);
-
   const id = req.body.productId;
 
   req.user
@@ -106,8 +102,6 @@ function postCartDeleteProduct(req, res) {
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function getOrders(req, res) {
-  if (!req.user) return res.sendStatus(401);
-
   Order.find({ "user.userId": req.user._id })
     .then((orders) => {
       res.render("shop/orders", {
@@ -126,8 +120,6 @@ function getOrders(req, res) {
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function postOrder(req, res) {
-  if (!req.user) return res.sendStatus(401);
-
   req.user
     .populate("cart.items.productId")
     .then((user) => {

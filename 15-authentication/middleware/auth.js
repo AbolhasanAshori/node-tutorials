@@ -24,6 +24,14 @@ function authenticateUser(req, res, next) {
     });
 }
 
+/** @type {import('./index').ExpressMiddleware} */
+function isAuthenticated(req, res, next) {
+  if (!req.user) return res.redirect("/login");
+
+  next();
+}
+
 module.exports = {
   authenticateUser,
+  isAuthenticated,
 };

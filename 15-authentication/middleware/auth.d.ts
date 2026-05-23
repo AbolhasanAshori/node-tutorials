@@ -16,3 +16,4 @@ declare global {
 }
 
 declare const authenticateUser: ExpressMiddleware;
+declare const isAuthenticated: ExpressMiddleware;

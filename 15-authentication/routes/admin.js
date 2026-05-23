@@ -7,15 +7,16 @@ const {
   postEditProduct,
   postDeleteProduct,
 } = require("../controllers/admin");
+const { isAuthenticated } = require("../middleware/auth");
 
 const router = express.Router();
 
 router
-  .get("/products", getProducts)
-  .get("/add-product", getAddProduct)
-  .post("/add-product", postAddProduct)
-  .get("/edit-product/:productId", getEditProduct)
-  .post("/edit-product", postEditProduct)
-  .post("/delete-product", postDeleteProduct);
+  .get("/products", isAuthenticated, getProducts)
+  .get("/add-product", isAuthenticated, getAddProduct)
+  .post("/add-product", isAuthenticated, postAddProduct)
+  .get("/edit-product/:productId", isAuthenticated, getEditProduct)
+  .post("/edit-product", isAuthenticated, postEditProduct)
+  .post("/delete-product", isAuthenticated, postDeleteProduct);
 
 module.exports = router;

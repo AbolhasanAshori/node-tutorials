@@ -9,6 +9,7 @@ const {
   getOrders,
   postOrder,
 } = require("../controllers/shop");
+const { isAuthenticated } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -16,10 +17,10 @@ router
   .get("/", getIndex)
   .get("/products", getProducts)
   .get("/products/:productId", getProductItem)
-  .get("/cart", getCart)
-  .post("/cart", postCart)
-  .post("/cart-delete-item", postCartDeleteProduct)
-  .get("/orders", getOrders)
-  .post("/create-order", postOrder);
+  .get("/cart", isAuthenticated, getCart)
+  .post("/cart", isAuthenticated, postCart)
+  .post("/cart-delete-item", isAuthenticated, postCartDeleteProduct)
+  .get("/orders", isAuthenticated, getOrders)
+  .post("/create-order", isAuthenticated, postOrder);
 
 module.exports = router;
