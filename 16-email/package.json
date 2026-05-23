@@ -16,6 +16,7 @@
     "@types/csurf": "^1.11.5",
     "@types/express": "^5.0.6",
     "@types/express-session": "^1.19.0",
+    "@types/nodemailer": "^8.0.0",
     "nodemon": "^3.1.14"
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "express-handlebars": "^8.0.1",
     "express-session": "^1.19.0",
     "mongodb": "^7.2.0",
-    "mongoose": "^9.6.2"
+    "mongoose": "^9.6.2",
+    "nodemailer": "^8.0.7"
   }
 }

@@ -1,5 +1,14 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
+const { createTransport } = require("nodemailer");
+
+const transporter = createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function getLogin(req, res) {
@@ -93,6 +102,12 @@ function postSignup(req, res) {
         })
         .then(() => {
           res.redirect("/login");
+          return transporter.sendMail({
+            to: email,
+            from: "shop@node-tutorials.com",
+            subject: "Signup successed!",
+            html: "<h1>You successfully signed up!</h1>",
+          });
         })
         .catch(console.error);
     })
