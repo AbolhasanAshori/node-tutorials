@@ -24,7 +24,7 @@ function authenticateUser(req, res, next) {
     });
 }
 /** @type {import('./index').ExpressMiddleware} */
-function populateLocals() {
+function populateLocals(req, res, next) {
   res.locals.isAuthenticated = !!req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
   next();
