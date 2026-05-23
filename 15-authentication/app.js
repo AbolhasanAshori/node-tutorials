@@ -12,6 +12,7 @@ const { adminRoutes, shopRoutes, authRoutes } = require("./routes");
 const { authenticateUser, populateLocals } = require("./middleware/auth");
 const { createDbConnectionUri } = require("./util/database");
 const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const MONGODB_URI = createDbConnectionUri({
   hostname: process.env.DB_HOST ?? "127.0.0.1",
@@ -54,6 +55,7 @@ app
   .use(express.static(path.join(__dirname, "public")))
   .use(cookieParser())
   .use(sessionHandler)
+  .use(flash())
   .use(csrfProtection)
   .use(authenticateUser)
   .use(populateLocals);
