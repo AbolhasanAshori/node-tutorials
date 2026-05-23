@@ -35,8 +35,25 @@ function postLogout(req, res) {
   });
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
+function getSignup(req, res) {
+  res.render("auth/signup", {
+    title: "Signup",
+    isAuthenticated: req.session.isLoggedIn,
+    config: {
+      activePath: { signup: true },
+      css: { forms: true, auth: true },
+    },
+  });
+}
+
+/** @type {import('../middleware').ExpressMiddleware} */
+function postSignup(_req, _res) {}
+
 module.exports = {
   getLogin,
   postLogin,
   postLogout,
+  getSignup,
+  postSignup,
 };
