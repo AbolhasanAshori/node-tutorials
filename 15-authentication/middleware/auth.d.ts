@@ -6,6 +6,10 @@ declare global {
     interface Request {
       user?: IUser;
     }
+    interface Locals {
+      isAuthenticated: boolean;
+      csrfToken: string;
+    }
   }
 
   namespace session {
@@ -16,4 +20,5 @@ declare global {
 }
 
 declare const authenticateUser: ExpressMiddleware;
+declare const populateLocals: ExpressMiddleware;
 declare const isAuthenticated: ExpressMiddleware;

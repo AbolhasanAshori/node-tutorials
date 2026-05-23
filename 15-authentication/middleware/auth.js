@@ -23,6 +23,12 @@ function authenticateUser(req, res, next) {
       next();
     });
 }
+/** @type {import('./index').ExpressMiddleware} */
+function populateLocals() {
+  res.locals.isAuthenticated = !!req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+}
 
 /** @type {import('./index').ExpressMiddleware} */
 function isAuthenticated(req, res, next) {
@@ -34,4 +40,5 @@ function isAuthenticated(req, res, next) {
 module.exports = {
   authenticateUser,
   isAuthenticated,
+  populateLocals,
 };

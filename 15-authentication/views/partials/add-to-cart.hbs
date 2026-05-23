@@ -1,6 +1,7 @@
-{{#if isAuthenticated}}
+{{#if @root.isAuthenticated}}
   <form action="/cart" method="post">
-    <button class="btn" type="submit">Add to Cart</button>
+    <input type="hidden" name="_csrf" value="{{@root.csrfToken}}" />
     <input type="hidden" name="productId" value="{{id}}" />
+    <button class="btn" type="submit">Add to Cart</button>
   </form>
 {{/if}}

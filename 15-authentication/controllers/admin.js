@@ -1,11 +1,10 @@
 const Product = require("../models/product");
 
 /** @type {import('../middleware').ExpressMiddleware} */
-function getAddProduct(req, res) {
+function getAddProduct(_req, res) {
   res.render("admin/edit-product", {
     title: "Add Product",
     editing: false,
-    isAuthenticated: req.session.isLoggedIn,
     config: {
       css: {
         product: true,
@@ -44,7 +43,6 @@ function getEditProduct(req, res) {
       res.render("admin/edit-product", {
         title: "Update Product",
         editing: editMode,
-        isAuthenticated: req.session.isLoggedIn,
         product,
         config: {
           css: {
@@ -99,7 +97,6 @@ function getProducts(req, res) {
         hasProducts: products.length > 0,
         products,
         title: "Admin Products",
-        isAuthenticated: req.session.isLoggedIn,
         config: {
           css: { product: true },
           activePath: { adminProductList: true },

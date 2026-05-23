@@ -2,12 +2,11 @@ const { Order } = require("../models");
 const Product = require("../models/product");
 
 /** @type {import('../middleware').ExpressMiddleware} */
-function getProducts(req, res) {
+function getProducts(_req, res) {
   Product.find()
     .then((products) => {
       res.render("shop/product-list", {
         title: "All Products",
-        isAuthenticated: req.session.isLoggedIn,
         hasProducts: products.length > 0,
         products,
         config: {
@@ -27,7 +26,6 @@ function getProductItem(req, res) {
       res.render("shop/product-detail", {
         product: product,
         title: product.title,
-        isAuthenticated: req.session.isLoggedIn,
         config: {
           activePath: { productList: true },
         },
@@ -37,12 +35,11 @@ function getProductItem(req, res) {
 }
 
 /** @type {import('../middleware').ExpressMiddleware} */
-function getIndex(req, res) {
+function getIndex(_req, res) {
   Product.find()
     .then((products) => {
       res.render("shop/index", {
         title: "Shop",
-        isAuthenticated: req.session.isLoggedIn,
         hasProducts: products.length > 0,
         products,
         config: {
@@ -63,7 +60,6 @@ function getCart(req, res) {
 
       res.render("shop/cart", {
         title: "Your Cart",
-        isAuthenticated: req.session.isLoggedIn,
         products,
         hasProducts: products.length > 0,
         config: {
@@ -106,7 +102,6 @@ function getOrders(req, res) {
     .then((orders) => {
       res.render("shop/orders", {
         title: "Orders",
-        isAuthenticated: req.session.isLoggedIn,
         hasOrders: orders.length > 0,
         orders,
         config: {

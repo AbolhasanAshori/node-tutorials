@@ -2,10 +2,9 @@ const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 
 /** @type {import('../middleware').ExpressMiddleware} */
-function getLogin(req, res) {
+function getLogin(_req, res) {
   res.render("auth/login", {
     title: "Login",
-    isAuthenticated: req.session.isLoggedIn,
     config: {
       activePath: { login: true },
       css: { forms: true, auth: true },
@@ -48,10 +47,9 @@ function postLogout(req, res) {
 }
 
 /** @type {import('../middleware').ExpressMiddleware} */
-function getSignup(req, res) {
+function getSignup(_req, res) {
   res.render("auth/signup", {
     title: "Signup",
-    isAuthenticated: req.session.isLoggedIn,
     config: {
       activePath: { signup: true },
       css: { forms: true, auth: true },

@@ -1,5 +1,6 @@
 <main>
   <form class="login-form" action="/signup" method="post">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     <div class="form-control">
       <label for="email">E-Mail</label>
       <input type="email" name="email" id="email" />
