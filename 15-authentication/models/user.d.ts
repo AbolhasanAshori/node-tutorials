@@ -1,4 +1,4 @@
-import type { Document, ObjectId } from "mongoose";
+import type { Document, Model, ObjectId } from "mongoose";
 import type { IProduct } from "./product";
 
 export interface IUser extends Document {
@@ -18,4 +18,5 @@ export interface IUser extends Document {
   clearCart(this: IUser): Promise<void>;
 }
 
-export default IUser;
+declare const User: Model<IUser>;
+export = User;

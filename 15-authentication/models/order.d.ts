@@ -1,4 +1,4 @@
-import type { Document, ObjectId } from "mongoose";
+import type { Document, Model, ObjectId } from "mongoose";
 import type { IProduct } from "./product";
 
 export interface IOrder extends Document {
@@ -14,4 +14,5 @@ export interface IOrder extends Document {
   };
 }
 
-export default IProduct;
+declare const Order: Model<IOrder>;
+export = Order;
