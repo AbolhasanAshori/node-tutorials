@@ -4,9 +4,8 @@ const express = require("express");
 const { engine } = require("express-handlebars");
 const { getNotFound } = require("./controllers/error");
 const { adminRoutes, shopRoutes, authRoutes } = require("./routes");
-const { default: mongoose, Types } = require("mongoose");
+const { default: mongoose } = require("mongoose");
 const { createDbConnectionUri } = require("./util/database");
-const User = require("./models/user");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { MongoStore } = require("connect-mongo");
@@ -71,13 +70,6 @@ mongoose
   .then(() => {
     console.log("Successfully connected to MongoDB using Mongoose!");
 
-    return User.updateOne(
-      { _id: new Types.ObjectId("5baa2528563f16379fc8a610") },
-      { $setOnInsert: { name: "test", email: "test@email.com" } },
-      { upsert: true },
-    );
-  })
-  .then(() => {
     app.listen(3000, () => {
       console.log("Server running at http://localhost:3000");
     });

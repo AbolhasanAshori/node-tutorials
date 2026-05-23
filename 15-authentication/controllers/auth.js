@@ -1,4 +1,5 @@
 const { User } = require("../models");
+const bcrypt = require("bcryptjs");
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function getLogin(req, res) {
@@ -14,14 +15,25 @@ function getLogin(req, res) {
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function postLogin(req, res) {
-  User.findById("5baa2528563f16379fc8a610")
+  const { email, password } = req.body;
+
+  User.findOne({ email })
     .then((user) => {
-      req.session.isLoggedIn = true;
-      req.session.userId = user.id;
-      req.session.save((err) => {
-        if (err) console.error(err);
-        res.redirect("/");
-      });
+      if (!user) return res.redirect("/login");
+
+      return bcrypt
+        .compare(password, user.password)
+        .then((matched) => {
+          if (!matched) return res.redirect("/login");
+
+          req.session.isLoggedIn = true;
+          req.session.userId = user.id;
+          return req.session.save((err) => {
+            if (err) console.error(err);
+            res.redirect("/");
+          });
+        })
+        .catch(console.error);
     })
     .catch(console.error);
 }
@@ -48,7 +60,30 @@ function getSignup(req, res) {
 }
 
 /** @type {import('../middleware').ExpressMiddleware} */
-function postSignup(_req, _res) {}
+function postSignup(req, res) {
+  const { email, password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) return res.redirect("/signup");
+
+  User.findOne({ email }).then((userDoc) => {
+    if (userDoc) return res.redirect("/signup");
+
+    return bcrypt
+      .hash(password, 12)
+      .then((hashedPass) => {
+        const user = new User({
+          email,
+          password: hashedPass,
+          cart: { items: [] },
+        });
+        return user.save();
+      })
+      .then(() => {
+        res.redirect("/login");
+      })
+      .catch(console.error);
+  });
+}
 
 module.exports = {
   getLogin,

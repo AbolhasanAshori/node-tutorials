@@ -2,8 +2,8 @@ import type { Document, Model, ObjectId } from "mongoose";
 import type { IProduct } from "./product";
 
 export interface IUser extends Document {
-  name: string;
   email: string;
+  password: string;
   cart: {
     items: [
       {
