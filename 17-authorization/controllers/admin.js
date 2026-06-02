@@ -62,14 +62,17 @@ function postEditProduct(req, res) {
 
   Product.findById(id)
     .then((product) => {
+      if (product.userId.toString() !== req.user._id.toString()) {
+        return res.redirect("/");
+      }
+
       product.title = title;
       product.price = price;
       product.imageUrl = imageUrl;
       product.description = description;
-      return product.save();
-    })
-    .then(() => {
-      res.redirect("/admin/products");
+      return product.save().then(() => {
+        res.redirect("/admin/products");
+      });
     })
     .catch((err) => console.error(err));
 }
@@ -77,18 +80,19 @@ function postEditProduct(req, res) {
 /** @type {import('../middleware').ExpressMiddleware} */
 function postDeleteProduct(req, res) {
   const id = req.body.productId;
-  Product.findByIdAndDelete(id)
-    .then(() => {
-      res.redirect("/admin/products");
+  Product.deleteOne({ _id: id, userId: req.user._id })
+    .then((result) => {
+      if (!result.deletedCount) {
+        return res.redirect("/");
+      }
+      return res.redirect("/admin/products");
     })
     .catch((err) => console.error(err));
 }
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function getProducts(req, res) {
-  Product.find({
-    userId: req.user._id,
-  })
+  Product.find({ userId: req.user._id })
     // .select("title price -_id")
     // .populate("userId", "name")
     .populate("userId")
