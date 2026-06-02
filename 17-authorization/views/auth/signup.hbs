@@ -1,7 +1,7 @@
 <main>
-  {{#if errorMessage}}
-    <div class="user-message user-message--error">{{errorMessage}}</div>
-  {{/if}}
+  {{#each errorMessage}}
+    <div class="user-message user-message--error">{{this}}</div>
+  {{/each}}
   <form class="login-form" action="/signup" method="post">
     <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     <div class="form-control">

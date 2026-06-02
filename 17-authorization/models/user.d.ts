@@ -4,6 +4,8 @@ import type { IProduct } from "./product";
 export interface IUser extends Document {
   email: string;
   password: string;
+  resetToken: string;
+  resetTokenExpiration: Date;
   cart: {
     items: [
       {

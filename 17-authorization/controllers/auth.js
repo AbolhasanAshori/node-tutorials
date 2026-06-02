@@ -1,6 +1,7 @@
-const { User } = require("../models");
+const crypto = require("node:crypto");
 const bcrypt = require("bcryptjs");
 const { createTransport } = require("nodemailer");
+const { User } = require("../models");
 
 const transporter = createTransport({
   service: "gmail",
@@ -114,10 +115,68 @@ function postSignup(req, res) {
     .catch(console.error);
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
+function getReset(req, res) {
+  res.render("auth/reset", {
+    title: "Reset Password",
+    errorMessage: req.flash("error"),
+    config: {
+      css: { forms: true, auth: true },
+    },
+  });
+}
+
+/** @type {import('../middleware').ExpressMiddleware} */
+function postReset(req, res) {
+  const { email } = req.body;
+
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.error(err);
+      res.redirect("/reset");
+    }
+
+    const token = buffer.toString("hex");
+    User.findOne({ email })
+      .then((user) => {
+        if (!user) {
+          req.flash("error", "No account found with the provided credentials.");
+          res.redirect("/reset");
+        }
+
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3_600_000;
+        return user.save();
+      })
+      .then(() => {
+        const baseUrl = `${req.protocol}://${req.get("host")}`;
+        const url = new URL(`/reset/${token}`, baseUrl);
+
+        res.redirect("/");
+        if (process.env.NODE_ENV !== "production") {
+          console.info(`Click the following link to validate the reset password token: ${url.toString()}`);
+        }
+
+        return transporter.sendMail({
+          to: email,
+          from: "shop@node-tutorials.com",
+          subject: "Password Reset",
+          html: `
+            <p>You requested a password reset</p>
+            <p>click this <a href="${url.toString()}">Link</a> to set a new password</p>
+          `,
+        });
+      })
+      .catch(console.error);
+  });
+}
+
 module.exports = {
   getLogin,
   postLogin,
   postLogout,
   getSignup,
   postSignup,
+  getReset,
+  postReset,
 };
