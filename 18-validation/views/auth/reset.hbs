@@ -1,0 +1,13 @@
+<main>
+  {{#each errorMessage}}
+    <div class="user-message user-message--error">{{this}}</div>
+  {{/each}}
+  <form class="login-form" action="/reset" method="post">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+    <div class="form-control">
+      <label for="email">E-Mail</label>
+      <input id="email" type="text" name="email" />
+    </div>
+    <button class="btn" type="submit">Reset Password</button>
+  </form>
+</main>
