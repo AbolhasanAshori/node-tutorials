@@ -171,6 +171,56 @@ function postReset(req, res) {
   });
 }
 
+/** @type {import('../middleware').ExpressMiddleware} */
+function getNewPassword(req, res) {
+  const { token } = req.params;
+
+  User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+    .then((user) => {
+      if (!user) {
+        req.flash("error", "No account found with the provided credentials.");
+        res.redirect("/reset");
+      }
+
+      res.render("auth/new-password", {
+        title: "New Pasword",
+        errorMessage: req.flash("error"),
+        userId: user._id.toString(),
+        passwordToken: token,
+        config: {
+          css: { forms: true, auth: true },
+        },
+      });
+    })
+    .catch(console.error);
+}
+
+/** @type {import('../middleware').ExpressMiddleware} */
+function postNewPassword(req, res) {
+  const { password: newPassword, confirmPassword, passwordToken, userId } = req.body;
+
+  if (newPassword !== confirmPassword) {
+    req.flash("error", "The password and confirm password fields do not match.");
+    res.redirect(`/reset/${passwordToken}`);
+  }
+
+  User.findOne({ _id: userId, resetToken: passwordToken, resetTokenExpiration: { $gt: Date.now() } })
+    .then((user) => {
+      return Promise.all([user, bcrypt.hash(newPassword, 12)]);
+    })
+    .then(([user, hashedPass]) => {
+      user.password = hashedPass;
+      user.resetToken = undefined;
+      user.resetTokenExpiration = undefined;
+
+      return user.save();
+    })
+    .then(() => {
+      res.redirect("/login");
+    })
+    .catch(console.error);
+}
+
 module.exports = {
   getLogin,
   postLogin,
@@ -179,4 +229,6 @@ module.exports = {
   postSignup,
   getReset,
   postReset,
+  getNewPassword,
+  postNewPassword,
 };
