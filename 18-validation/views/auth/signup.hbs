@@ -1,8 +1,10 @@
 <main>
   {{#each errorMessage}}
-    <div class="user-message user-message--error">{{this}}</div>
+    {{#if @first}}
+      <div class="user-message user-message--error">{{this}}</div>
+    {{/if}}
   {{/each}}
-  <form class="login-form" action="/signup" method="post">
+  <form class="login-form" action="/signup" method="post" novalidate>
     <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     <div class="form-control">
       <label for="email">E-Mail</label>
@@ -10,7 +12,7 @@
     </div>
     <div class="form-control">
       <label for="password">Password</label>
-      <input type="password" name="password" id="password" />
+      <input type="password" name="password" id="password" minlength="5" />
     </div>
     <div class="form-control">
       <label for="confirmPassword">Confirm Password</label>
