@@ -15,16 +15,15 @@ const { User } = require("../models");
 
 const router = express.Router();
 
-const emailValidator = check("email")
-  .isEmail()
-  .withMessage("Please enter a valid email")
-  .custom((value) => {
-    return User.findOne({ email: value }).then((user) => {
-      if (user) {
-        return Promise.reject("An account with this email already exists. Please log in.");
-      }
-    });
+const emailValidator = check("email").isEmail().withMessage("Please enter a valid email");
+
+const signupEmailValidator = emailValidator.custom((value) => {
+  return User.findOne({ email: value }).then((user) => {
+    if (user) {
+      return Promise.reject("An account with this email already exists. Please log in.");
+    }
   });
+});
 
 const passwordValidator = body("password", "Please enter a password with only numbers, text and at least 5 characters.")
   .isLength({ min: 5 })
@@ -37,10 +36,10 @@ const confirmPasswordValidator = body(
 
 router
   .get("/login", getLogin)
-  .post("/login", postLogin)
+  .post("/login", [emailValidator, passwordValidator], postLogin)
   .post("/logout", postLogout)
   .get("/signup", getSignup)
-  .post("/signup", [emailValidator, passwordValidator, confirmPasswordValidator], postSignup)
+  .post("/signup", [signupEmailValidator, passwordValidator, confirmPasswordValidator], postSignup)
   .get("/reset", getReset)
   .post("/reset", postReset)
   .get("/reset/:token", getNewPassword)

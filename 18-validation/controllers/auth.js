@@ -27,6 +27,18 @@ function getLogin(req, res) {
 /** @type {import('../middleware').ExpressMiddleware} */
 function postLogin(req, res) {
   const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/login", {
+      title: "Login",
+      errorMessage: errors.array().map((err) => err.msg),
+      config: {
+        activePath: { login: true },
+        css: { forms: true, auth: true },
+      },
+    });
+  }
 
   User.findOne({ email })
     .then((user) => {
