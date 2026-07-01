@@ -5,6 +5,8 @@
  * @property {string} hostname
  * @property {string} dbName
  * @property {string} dbType
+ * @property {string} username
+ * @property {string} passwords
  */
 
 /**
@@ -13,12 +15,19 @@
  * @returns {string}
  */
 function createDbConnectionUri(options) {
-  const { dbType, dbName, hostname, port } = options;
+  const { dbType, dbName, hostname, port, username, password } = options;
 
   switch (dbType) {
     case "mongo":
-    case "mongodb":
-      return `mongodb://${hostname}:${port}/${dbName}`;
+    case "mongodb": {
+      let uri;
+      if (username && password) {
+        uri = `mongodb://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${hostname}:${port}/${dbName}`;
+      } else {
+        uri = `mongodb://${hostname}:${port}/${dbName}`;
+      }
+      return uri;
+    }
     default:
       throw "Unsupported or empty database type defined.";
   }

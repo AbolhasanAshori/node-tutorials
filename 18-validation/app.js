@@ -14,11 +14,15 @@ const { createDbConnectionUri } = require("./util/database");
 const csrf = require("csurf");
 const flash = require("connect-flash");
 
+const DB_NAME = process.env.DB_NAME ?? "test";
+
 const MONGODB_URI = createDbConnectionUri({
   hostname: process.env.DB_HOST ?? "127.0.0.1",
   port: process.env.DB_PORT ?? 27017,
-  dbName: process.env.DB_NAME ?? "test",
+  dbName: DB_NAME,
   dbType: process.env.DB_TYPE ?? "mongodb",
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
 });
 
 const viewEngine = engine({
@@ -63,7 +67,9 @@ app
 app.use("/admin", adminRoutes).use(shopRoutes).use(authRoutes).use(getNotFound);
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI, {
+    authSource: DB_NAME
+  })
   .then(() => {
     console.log("Successfully connected to MongoDB using Mongoose!");
 
