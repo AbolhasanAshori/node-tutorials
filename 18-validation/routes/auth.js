@@ -15,9 +15,13 @@ const { User } = require("../models");
 
 const router = express.Router();
 
-const emailValidator = check("email").isEmail().withMessage("Please enter a valid email");
+function createEmailValidator() {
+  return check("email").isEmail().withMessage("Please enter a valid email");
+}
 
-const signupEmailValidator = emailValidator.custom((value) => {
+const emailValidator = createEmailValidator();
+
+const signupEmailValidator = createEmailValidator().custom((value) => {
   return User.findOne({ email: value }).then((user) => {
     if (user) {
       return Promise.reject("An account with this email already exists. Please log in.");

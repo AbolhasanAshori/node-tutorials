@@ -33,6 +33,7 @@ function postLogin(req, res) {
     return res.status(422).render("auth/login", {
       title: "Login",
       errorMessage: errors.array().map((err) => err.msg),
+      formData: { email, password },
       config: {
         activePath: { login: true },
         css: { forms: true, auth: true },
@@ -90,13 +91,14 @@ function getSignup(req, res) {
 
 /** @type {import('../middleware').ExpressMiddleware} */
 function postSignup(req, res) {
-  const { email, password } = req.body;
+  const { email, password, confirmPassword } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/signup", {
       title: "Signup",
       errorMessage: errors.array().map((err) => err.msg),
+      formData: { email, password, confirmPassword },
       config: {
         activePath: { signup: true },
         css: { forms: true, auth: true },
