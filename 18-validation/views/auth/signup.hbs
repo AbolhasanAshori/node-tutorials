@@ -8,15 +8,18 @@
     <input type="hidden" name="_csrf" value="{{csrfToken}}" />
     <div class="form-control">
       <label for="email">E-Mail</label>
-      <input type="email" name="email" id="email" value="{{formData.email}}" />
+      <input class="{{#if errors.email}}invalid{{/if}}" type="email" name="email" id="email"
+        value="{{formData.email}}" />
     </div>
     <div class="form-control">
       <label for="password">Password</label>
-      <input type="password" name="password" id="password" minlength="5" value="{{formData.password}}" />
+      <input class="{{#if errors.password}}invalid{{/if}}" type="password" name="password" id="password" minlength="5"
+        value="{{formData.password}}" />
     </div>
     <div class="form-control">
       <label for="confirmPassword">Confirm Password</label>
-      <input type="password" name="confirmPassword" id="confirmPassword" value="{{formData.confirmPassword}}" />
+      <input class="{{#if errors.confirmPassword}}invalid{{/if}}" type="password" name="confirmPassword"
+        id="confirmPassword" minlength="5" value="{{formData.confirmPassword}}" />
     </div>
     <button class="btn" type="submit">Sign up</button>
   </form>
